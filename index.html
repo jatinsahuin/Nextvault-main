@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextVault | The Operating System for Human Knowledge</title>
-    
+
     <meta name="description" content="NextVault is the Operating System for Human Knowledge. An ambient intelligence layer that understands, connects, and synthesizes everything you learn.">
     <meta name="theme-color" content="#030303">
-    
+
     <meta property="og:title" content="NextVault | The Operating System for Human Knowledge">
     <meta property="og:description" content="An ambient intelligence layer that understands, connects, and synthesizes everything you learn.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://NextVault.com">
     <meta property="og:image" content="https://NextVault.com/og-image.jpg">
-    
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="NextVault | The Operating System for Human Knowledge">
-    
+
     <link rel="canonical" href="https://NextVault.com">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    
+
     <link rel="stylesheet" href="/src/css/styles.css">
 </head>
 <body>
@@ -42,7 +42,7 @@
             <div class="logo-container">
                 <a href="#hero" class="site-logo" aria-label="NextVault Home">NextVault</a>
             </div>
-            
+
             <!-- Mobile Toggle -->
             <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Toggle navigation menu">
                 <span class="hamburger-line"></span>
@@ -89,7 +89,7 @@
                 <h2>The Information Explosion</h2>
                 <p>Humanity generates more data in a day than we once did in a century. Traditional search is reactive. Folders are digital graveyards.</p>
             </header>
-            
+
             <div class="timeline-container">
                 <article class="timeline-card slide-up">
                     <h3>The Book Era</h3>
@@ -112,7 +112,7 @@
 
         <section id="human-memory" class="section-container">
             <div class="grid-layout two-columns">
-                <div class="text-content">
+                <div class, "text-content">
                     <h2>Human memory hasn't evolved for this.</h2>
                     <p>Our brains are incredible at understanding abstract ideas but terrible at storing infinite information. This biological bottleneck is holding back human potential.</p>
                 </div>
@@ -140,7 +140,7 @@
                         <div class="source-pill type-yt">Stanford Lecture</div>
                         <div class="source-pill type-img">Whiteboard.png</div>
                     </div>
-                    
+
                     <div class="mockup-phase phase-process">
                         <div class="process-ring"></div>
                         <div class="process-ring delayed"></div>
@@ -174,7 +174,19 @@
                     <div class="section-badge">Core Infrastructure</div>
                     <h2>Memory Engine™</h2>
                     <p>Designed to continuously analyze everything you save. It doesn't rely on keywords or tags. It aims to use high-dimensional semantic mapping to understand the underlying meaning of your thoughts.</p>
-                    <ul class="feature-list">
+
+                    <!-- NEW: Functional Ingestion Interface -->
+                    <div class="ingestion-upload-zone glass-card" style="margin-top: 2rem; padding: 2rem; border: 2px dashed rgba(139, 92, 246, 0.3); text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                        <div class="upload-icon" style="font-size: 2rem; margin-bottom: 1rem;">📂</div>
+                        <p style="margin-bottom: 1.5rem; opacity: 0.8;">Upload a .txt or .md file to seed your memory</p>
+                        <input type="file" id="knowledge-upload" accept=".txt,.md" style="display: none;">
+                        <button type="button" class="btn-primary" onclick="document.getElementById('knowledge-upload').click()">Select File</button>
+                    </div>
+
+                    <!-- Real-time Status Indicator -->
+                    <div id="ingestion-status" class="ingestion-status" style="margin-top: 1rem; min-height: 1.5rem; font-size: 0.9rem; font-weight: 500; transition: opacity 0.3s ease; text-align: center;"></div>
+
+                    <ul class="feature-list" style="margin-top: 2rem;">
                         <li>Finds hidden relationships automatically.</li>
                         <li>Surfaces forgotten ideas contextually.</li>
                         <li>Produces proactive insights before you search.</li>
@@ -182,7 +194,7 @@
                 </div>
                 <div class="animation-container memory-engine-visual slide-up">
                     <div class="me-sequence-wrapper">
-                        
+
                         <div class="me-layer me-sources">
                             <div class="me-source item-1">PDF</div>
                             <div class="me-source item-2">YouTube</div>
@@ -199,7 +211,7 @@
                         <div class="me-layer me-cards-layer">
                             <svg class="me-connections" preserveAspectRatio="none">
                                 <line class="me-line line-1" x1="50%" y1="50%" x2="20%" y2="20%" />
-                                <line class="me-line line-2" x1="50%" y1="50%" x2="80%" y2="30%" />
+                                <line class, "me-line line-2" x1="50%" y1="50%" x2="80%" y2="30%" />
                                 <line class="me-line line-3" x1="50%" y1="50%" x2="50%" y2="80%" />
                             </svg>
                             <div class="me-card card-1">Deep Learning</div>
@@ -223,7 +235,7 @@
                     <h2>Overnight Intelligence™</h2>
                     <p>While you sleep, NextVault runs batch-processing on local hardware. It reads yesterday's saves, updates your graph, and prepares your mind for tomorrow.</p>
                 </header>
-                
+
                 <div class="dashboard-preview-container slide-up">
                     <div class="morning-brief-card glass-card">
                         <h3>Good Morning.</h3>
@@ -243,7 +255,7 @@
                 <h2>The Shape of Your Mind</h2>
                 <p>Navigate your knowledge spatially. See how your ideas cluster, grow, and intersect.</p>
             </div>
-            
+
             <div class="graph-visualization-wrapper slide-up">
                 <canvas id="knowledge-graph-canvas" class="graph-canvas" role="img" aria-label="An interactive visualization of connected knowledge nodes including AI, Neural Networks, and Research Notes."></canvas>
                 <div class="graph-controls" aria-label="Graph zoom controls">
@@ -251,7 +263,7 @@
                     <button class="zoom-out" aria-label="Zoom Out">-</button>
                     <button class="reset-view" aria-label="Reset View">Reset</button>
                 </div>
-            </div>  
+            </div>
         </section>
 
         <section id="security-privacy" class="section-container">
@@ -280,7 +292,7 @@
                 <h2>Choose how your knowledge evolves.</h2>
                 <p>Whether you're learning alone or building with a team, NextVault grows with you.</p>
             </header>
-            
+
             <div class="pricing-grid grid-layout three-columns">
                 <article class="pricing-card slide-up">
                     <h3>Explorer</h3>
@@ -294,7 +306,7 @@
                     </ul>
                     <button class="btn-secondary full-width">Start Free</button>
                 </article>
-                
+
                 <article class="pricing-card featured-tier slide-up">
                     <div class="tier-badge">Early Access</div>
                     <h3>Professional</h3>
@@ -309,7 +321,7 @@
                     </ul>
                     <button type="button" class="btn-primary full-width" data-open-early-access>Request Early Access</button>
                 </article>
-                
+
                 <article class="pricing-card slide-up">
                     <h3>Teams</h3>
                     <p class="tier-description">For organizations building collective intelligence.</p>
