@@ -42,7 +42,7 @@ The conceptual foundation of NextVault. It transforms raw information into persi
 Responsibilities: ingestion, parsing, chunking, metadata extraction, semantic representation, embeddings, entity/concept identification, relationships, indexing, retrieval, knowledge updates, and contextual linking.
 
 ### Layer 3 — Living Knowledge Graph
-A genuine semantic knowledge graph representing relationships between entities (Person $\rightarrow$ Concept $\rightarrow$ Document $\rightarrow$ Project $\rightarrow$ Research $\rightarrow$ Idea). 
+A genuine semantic knowledge graph representing relationships between entities (Person -> Concept -> Document -> Project -> Research -> Idea). 
 Used for: discovery, contextual retrieval, relationship analysis, knowledge navigation, synthesis, recommendations, and surfacing unnoticed connections.
 
 ---
@@ -190,7 +190,7 @@ Consider: persistent entities, relationships, provenance, versioning, and timest
 
 ## 19. Provenance
 
-Every insight must be traceable back to its sources (Insight $\rightarrow$ Relationships $\rightarrow$ Source Documents).
+Every insight must be traceable back to its sources (Insight -> Relationships -> Source Documents).
 
 ---
 
@@ -278,7 +278,7 @@ Freedom over: code organization, internal abstractions, testing strategy, perfor
 
 **Do not optimize for the appearance of intelligence. Optimize for actual intelligence.**
 
-The product is intelligent when it can: understand $\rightarrow$ remember $\rightarrow$ connect $\rightarrow$ retrieve $\rightarrow$ reason $\rightarrow$ synthesize $\rightarrow$ learn.
+The product is intelligent when it can: understand -> remember -> connect -> retrieve -> reason -> synthesize -> learn.
 
 ---
 
@@ -304,21 +304,21 @@ Semantic HTML, keyboard navigation, and `prefers-reduced-motion` integration.
 ## 36. No Fake Features
 
 Honesty in presentation. 
-- Planned $\rightarrow$ "Planned"
-- Prototype $\rightarrow$ "Prototype"
-- Working $\rightarrow$ "Working"
+- Planned -> "Planned"
+- Prototype -> "Prototype"
+- Working -> "Working"
 
 ---
 
 ## 37. Development Mindset
 
-VISION $\rightarrow$ PRODUCT REQUIREMENT $\rightarrow$ TECHNICAL DESIGN $\rightarrow$ IMPLEMENTATION $\rightarrow$ TESTING $\rightarrow$ UX REVIEW $\rightarrow$ DOCUMENTATION $\rightarrow$ COMMIT.
+VISION -> PRODUCT REQUIREMENT -> TECHNICAL DESIGN -> IMPLEMENTATION -> TESTING -> UX REVIEW -> DOCUMENTATION -> COMMIT.
 
 ---
 
 ## 38. Definition of “Done”
 
-A feature is done when: implementation is complete, UI/Backend work, errors handled, edge cases considered, security checked, responsive, tested, documented, and committed.
+A feature is done when: implementation is complete, UI/Backend work, errors are handled, edge cases considered, security checked, responsive, tested, documented, and committed.
 
 ---
 

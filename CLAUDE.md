@@ -42,7 +42,7 @@ A task is only marked as `completed` when it meets all the following criteria:
 3. **UI/UX:** Responsive design works across mobile and desktop; accessibility standards met.
 4. **Security:** No secrets committed; data isolation verified.
 5. **Documentation:** `README.md` or internal docs updated; `CHANGELOG.md` updated.
-6. **Cleanliness:** Unused code and debug logs removed.
+6., **Cleanliness:** Unused code and debug logs removed.
 7. **Commit:** Pushed to the appropriate branch with a meaningful message.
 
 ---
