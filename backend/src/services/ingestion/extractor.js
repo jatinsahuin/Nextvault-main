@@ -1,10 +1,10 @@
-class Extractor {
+export class Extractor {
     async extract(fileBuffer) {
         throw new Error('Method extract() must be implemented');
     }
 }
 
-class TextExtractor extends Extractor {
+export class TextExtractor extends Extractor {
     async extract(fileBuffer) {
         const text = fileBuffer.toString('utf8');
         return {
@@ -15,10 +15,9 @@ class TextExtractor extends Extractor {
     }
 }
 
-class MarkdownExtractor extends Extractor {
+export class MarkdownExtractor extends Extractor {
     async extract(fileBuffer) {
         const text = fileBuffer.toString('utf8');
-        // In a real implementation, we would parse MD headings here
         return {
             content: text,
             language: 'en',
@@ -27,7 +26,7 @@ class MarkdownExtractor extends Extractor {
     }
 }
 
-class ExtractorFactory {
+export class ExtractorFactory {
     static getExtractor(mimeType) {
         switch (mimeType) {
             case 'text/plain':
@@ -40,5 +39,3 @@ class ExtractorFactory {
         }
     }
 }
-
-module.exports = { ExtractorFactory };

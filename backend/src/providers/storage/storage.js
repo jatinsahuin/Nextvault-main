@@ -1,7 +1,7 @@
-const fs = require('fs').promises;
-const path = require('path');
+import fs from 'fs/promises';
+import path from 'path';
 
-class StorageProvider {
+export class StorageProvider {
     async save(userId, sourceId, fileBuffer) {
         throw new Error('Method save() must be implemented');
     }
@@ -13,10 +13,10 @@ class StorageProvider {
     }
 }
 
-class LocalStorageProvider extends StorageProvider {
+export class LocalStorageProvider extends StorageProvider {
     constructor(baseDir = 'storage/raw') {
         super();
-        this.baseDir = baseDir;
+        this.baseDir = path.resolve(baseDir);
     }
 
     async save(userId, sourceId, fileBuffer) {
@@ -37,5 +37,3 @@ class LocalStorageProvider extends StorageProvider {
         await fs.unlink(storagePath);
     }
 }
-
-module.exports = { StorageProvider, LocalStorageProvider };

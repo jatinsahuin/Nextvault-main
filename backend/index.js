@@ -6,23 +6,30 @@ import { createSource, getSourceStatus, processIngestion } from './src/services/
 const fastify = Fastify({ logger: true });
 
 fastify.register(cors, {
-    origin: true // In production, replace with actual frontend domain
+    origin: true
 });
 fastify.register(multipart);
+
+// Mock User for Stage 1
+const MOCK_USER_ID = '00000000-0000-0000-0000-000000000000';
 
 fastify.post('/sources', async (request, reply) => {
     const data = await request.file();
     if (!data) return reply.status(400).send({ error: 'No file uploaded' });
 
     try {
-        const { sourceId, status } = await createSource('00000000-0000-0000-0000-000000000000', data, {});
+        const { sourceId, status, isDuplicate } = await createSource(MOCK_USER_ID, data, {});
 
-        processIngestion(sourceId).catch(err => console.error('Background processing error:', err));
+        // Background process (Minimal vertical slice implementation)
+        processIngestion(sourceId).catch(err => {
+            console.error('Background processing error:', err);
+        });
 
         return reply.status(202).send({
-            jobId: 'job-' + Date.now(),
+            jobId: `job-${Date.now()}`,
             sourceId,
-            status
+            status,
+            isDuplicate
         });
     } catch (err) {
         request.log.error(err);
@@ -32,7 +39,7 @@ fastify.post('/sources', async (request, reply) => {
 
 fastify.get('/sources/:id/status', async (request, reply) => {
     try {
-        const status = await getSourceStatus(request.params.id);
+        const status = await getSourceStatus(request.params.id, MOCK_USER_ID);
         return { sourceId: request.params.id, status };
     } catch (err) {
         return reply.status(404).send({ error: err.message });
