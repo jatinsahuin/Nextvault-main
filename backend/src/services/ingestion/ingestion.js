@@ -1,7 +1,7 @@
 import pg from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
-import { LocalStorageProvider } from '../providers/storage/storage.js';
+import { LocalStorageProvider } from '../../providers/storage/storage.js';
 import { ExtractorFactory } from './extractor.js';
 
 const { Pool } = pg;
