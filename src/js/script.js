@@ -1,10 +1,8 @@
 // Core Interaction Architecture
+'use strict';
 
 import { api } from './api.js';
 import { IngestionUI } from './ingestion-ui.js';
-
-// Core Interaction Architecture
-'use strict';
 
 const CONFIG = {
     isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,

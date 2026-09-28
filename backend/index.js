@@ -6,11 +6,11 @@ import { createSource, getSourceStatus, processIngestion } from './src/services/
 const fastify = Fastify({ logger: true });
 
 fastify.register(cors, {
-    origin: true
+    origin: true // Allows your frontend to talk to the backend
 });
 fastify.register(multipart);
 
-// Mock User for Stage 1
+// Mock User ID for the Vertical Slice
 const MOCK_USER_ID = '00000000-0000-0000-0000-000000000000';
 
 fastify.post('/sources', async (request, reply) => {
@@ -18,18 +18,14 @@ fastify.post('/sources', async (request, reply) => {
     if (!data) return reply.status(400).send({ error: 'No file uploaded' });
 
     try {
-        const { sourceId, status, isDuplicate } = await createSource(MOCK_USER_ID, data, {});
-
-        // Background process (Minimal vertical slice implementation)
-        processIngestion(sourceId).catch(err => {
-            console.error('Background processing error:', err);
-        });
+        const { sourceId, status } = await createSource(MOCK_USER_ID, data, {});
+        // Trigger background processing
+        processIngestion(sourceId).catch(err => console.error('Background processing error:', err));
 
         return reply.status(202).send({
             jobId: `job-${Date.now()}`,
             sourceId,
-            status,
-            isDuplicate
+            status
         });
     } catch (err) {
         request.log.error(err);
