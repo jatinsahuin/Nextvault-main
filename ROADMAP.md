@@ -4,9 +4,13 @@ NextVault is not being built as a feature-set, but as a progression of cognitive
 
 ## Stage 1 — Foundation
 *Goal: Build the smallest technically sound foundation for knowledge capture and retrieval.*
+- [x] Cinematic Landing Experience (Vision Prototype)
+- [x] Brand Identity & Design System
 - [ ] Secure Authentication & User Isolation
-- [ ] Knowledge Ingestion Pipeline (PDF, Markdown, Text)
-- [ ] Basic Storage & Indexing
+- [x] Ingestion Pipeline: Text + Markdown (backend, #010B)
+- [ ] Ingestion: PDF extraction
+- [x] Basic Storage (raw files + normalized text)
+- [ ] Indexing (chunking + embeddings)
 - [ ] Semantic Search (Vector-based retrieval)
 
 ## Stage 2 — Intelligence

@@ -201,3 +201,26 @@ Create a premium, cinematic final call-to-action that elegantly closes the landi
 
 ### Result
 The landing page now concludes with a confident, visually striking finish that naturally guides visitors toward the early access waitlist without relying on fake registration flows.
+
+---
+
+## Ticket #010B — Ingestion Pipeline (Backend)
+**Status:** ✅ Closed (branch `feature/ingestion-pipeline`)
+
+### Goal
+Prove, with no UI, that a file can enter NextVault, be saved to disk, and be processed into normalized text.
+
+### Changes
+- New `server/` package: Node 20+, TypeScript, Fastify 5, PostgreSQL (`pg`, no ORM).
+- Schema: `sources`, `ingestion_jobs` (RECEIVED → PROCESSING → PROCESSED/FAILED), `normalized_content`. Added `error` and `created_at` to jobs.
+- `POST /sources` (.txt/.md only, size-limited, rejects before reading the body) and `GET /sources/:id`.
+- `StorageProvider` interface + `LocalStorageProvider` (atomic writes, traversal-proof keys).
+- SHA-256 per upload: per-user duplicate detection and integrity check before processing.
+- `ExtractorFactory` → `TextExtractor` / `MarkdownExtractor` (versioned `extraction_method`).
+- Postgres-backed job queue (`SKIP LOCKED`), retries, stuck-job recovery. No Redis or broker.
+- 26 automated tests against real PostgreSQL.
+
+### Known limitations
+- **No real authentication.** A single `DEV_USER_ID` stands in; the server refuses to start in production.
+- Uploads are buffered in memory (fine at the 5 MB cap; PDFs will need streaming).
+- Orphan files are possible only if the process crashes between file write and DB commit; a cleanup sweep is planned.
