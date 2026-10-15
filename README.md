@@ -30,26 +30,33 @@ NextVault is built on a layered architecture to ensure intelligence can evolve w
 
 ## 🚀 Current Status: Stage 1 (Foundation)
 
-We are currently in the **Foundation** stage, establishing the product identity and the initial technical framework.
+We are in the **Foundation** stage: a working backend for knowledge capture, with the product identity built in front of it.
 
 ### Current Progress
-- [x] **Vision Prototype:** Cinematic landing experience with high-performance motion systems.
+- [x] **Vision Prototype:** Cinematic landing experience with high-performance motion systems. *(Prototype: the product walkthrough on the page is an illustration, not connected to the backend.)*
 - [x] **Product Constitution:** Defined architectural boundaries and development principles.
-- [ ] **Ingestion Engine:** (In Progress) Moving from mockup to functional data pipeline.
+- [x] **Ingestion Pipeline (backend):** Upload `.txt` / `.md`, store the raw file, process it in the background into normalized text. *(Working. API only, no UI yet.)*
+- [x] **Authentication & isolation (backend):** Supabase Auth verified via JWKS; every user's data is isolated; rate limited. *(Working. API only, no UI yet.)*
+- [ ] **Memory Engine:** Chunking, embeddings, semantic search. *(Planned.)*
+- [ ] **PDF ingestion.** *(Planned.)*
+
+See [ROADMAP.md](ROADMAP.md) for what comes next and [CHANGELOG.md](CHANGELOG.md) for what has shipped.
 
 ---
 
 ## 💻 Quick Start
 
-### Installation
+### Landing page (frontend)
 ```bash
-git clone https://github.com/jatinsahuin/NextVault.git
-cd NextVault
+git clone https://github.com/jatinsahuin/Nextvault-main.git
+cd Nextvault-main
 npm install
 npm run dev
 ```
+Open `http://localhost:3000` to experience the vision prototype.
 
-Open `http://localhost:5173` to experience the vision prototype.
+### Backend API
+The backend lives in [`server/`](server/) and needs Node 20+ and PostgreSQL. Setup, authentication, and testing steps are in [`server/README.md`](server/README.md).
 
 ---
 
