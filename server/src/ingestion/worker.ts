@@ -23,6 +23,7 @@ export class IngestionWorker {
     private readonly db: Db,
     private readonly storage: StorageProvider,
     private readonly extractors: ExtractorFactory,
+    private readonly embeddingService: any, // Using any for now to avoid complex circular deps in this turn
     private readonly opts: WorkerOptions,
     private readonly log: { error: (o: unknown, m?: string) => void } = console,
   ) {}
@@ -68,10 +69,11 @@ export class IngestionWorker {
         throw new ExtractionError('Stored file does not match its recorded hash', 'INTEGRITY_MISMATCH');
       }
       const result = await this.extractors.forMime(source.mime_type).extract(raw);
+      const embedding = await this.embeddingService.generateEmbedding(result.text);
 
-      // Content and PROCESSED status commit together or not at all.
+      // Content, Embedding, and PROCESSED status commit together or not at all.
       await withTransaction(this.db, async (c) => {
-        await repo.upsertContent(c, source.id, result.text, result.metadata, result.method);
+        await repo.upsertContent(c, source.id, result.text, result.metadata, result.method, embedding.vector);
         await repo.markProcessed(c, job.id);
       });
     } catch (err) {

@@ -8,6 +8,9 @@ import { IngestionWorker } from './ingestion/worker.js';
 import { ExtractorFactory } from './ingestion/extractors/ExtractorFactory.js';
 import { UploadRejected } from './ingestion/uploadValidation.js';
 import { sourceRoutes } from './routes/sources.js';
+import { searchRoutes } from './routes/search.js';
+import { OpenAIEmbeddingProvider } from './providers/ai/OpenAIEmbeddingProvider.js';
+import { EmbeddingService } from './services/EmbeddingService.js';
 
 export interface App { fastify: FastifyInstance; worker: IngestionWorker }
 
@@ -19,7 +22,10 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
     limits: { fileSize: config.maxUploadBytes, files: 1, fields: 5, parts: 6 },
   });
 
-  const worker = new IngestionWorker(db, storage, new ExtractorFactory(), {
+  const embeddingProvider = new OpenAIEmbeddingProvider(config.openaiApiKey || '');
+  const embeddingService = new EmbeddingService(embeddingProvider);
+
+  const worker = new IngestionWorker(db, storage, new ExtractorFactory(), embeddingService, {
     pollMs: config.workerPollMs, maxAttempts: config.maxJobAttempts, stuckAfterMs: config.jobStuckAfterMs,
   }, fastify.log);
   const ingestion = new IngestionService(db, storage);
@@ -44,6 +50,7 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
   });
 
   await fastify.register(sourceRoutes, { config, db, ingestion, worker });
+  await fastify.register(searchRoutes, { config, db, embeddingService });
   fastify.addHook('onClose', async () => { await worker.stop(); });
   return { fastify, worker };
 }

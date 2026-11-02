@@ -68,13 +68,14 @@ export const repo = {
   },
 
   /** Idempotent: a retried job overwrites rather than duplicating content. */
-  async upsertContent(db: Queryable, sourceId: string, text: string, metadata: object, method: string) {
+  async upsertContent(db: Queryable, sourceId: string, text: string, metadata: object, method: string, embedding?: number[]) {
+    const embeddingValue = embedding ? \`\${JSON.stringify(embedding)}\` : 'NULL';
     await db.query(
-      `INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method)
-       VALUES ($1,$2,$3,$4)
+      \`INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method, embedding)
+       VALUES (\$1,\$2,\$3,\$4, \${embeddingValue})
        ON CONFLICT (source_id) DO UPDATE
          SET extracted_text=EXCLUDED.extracted_text, metadata=EXCLUDED.metadata,
-             extraction_method=EXCLUDED.extraction_method, created_at=now()`,
+             extraction_method=EXCLUDED.extraction_method, embedding=EXCLUDED.embedding, created_at=now()\`,
       [sourceId, text, JSON.stringify(metadata), method],
     );
   },
