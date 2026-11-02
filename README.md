@@ -1,63 +1,110 @@
-# NextVault
-
+# NextVault 🌌
 **The Operating System for Human Knowledge.**
 
-NextVault is an ambient intelligence layer designed to understand, connect, and synthesize everything you learn. It is not a note-taking app or a workspace—it is a cognitive extension built to ensure that no brilliant thought is ever lost to the noise of the information explosion.
+![Version](https://img.shields.io/badge/version-0.1.0--alpha-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Stack](https://img.shields.io/badge/stack-Fastify%20%7C%20PostgreSQL%20%7C%20pgvector-black)
 
-[Vision & Constitution](VISION.md) | [Roadmap](ROADMAP.md) | [Engineering Guide](CLAUDE.md) | [Changelog](CHANGELOG.md)
+NextVault is not a note-taking application, a document manager, or a productivity tool. It is a fundamental rethink of how humans store, retrieve, connect, and develop knowledge over time.
+
+## 👁️ The Vision
+We live in an era of information abundance but memory fragmentation. We consume vast amounts of data, but that knowledge remains trapped in isolated files, forgotten folders, and the limitations of biological memory.
+
+**NextVault is designed to be a persistent, intelligent memory layer between humans and the information they encounter throughout their lives.**
+
+Instead of treating knowledge as static files, NextVault treats it as a **living system**—where information is understood semantically, connected automatically, and developed continuously.
 
 ---
 
-## 🧠 The Core Idea
+## 🚀 Core Pillars
 
-Digital memory is currently a series of "buckets"—folders, tags, and databases. But knowledge is a web. 
+### 🧠 The Memory Engine™
+The foundation of NextVault. It transforms raw, fragmented information into persistent, interconnected knowledge.
+- **Semantic Ingestion:** Moves beyond keywords to understand the *meaning* of content.
+- **Vector Representation:** Utilizes high-dimensional embeddings to map concepts in a latent space.
+- **Atomic Retrieval:** Retrieves knowledge based on context and intent, not just exact matches.
 
-NextVault replaces the friction of manual indexing with a proactive system. It maps the semantic meaning of your data, identifying hidden relationships between disparate ideas and surfacing them exactly when they become relevant.
+### 🌙 Overnight Intelligence™
+Knowledge work shouldn't stop when the user does. NextVault operates in the background to synthesize information.
+- **Relationship Discovery:** Identifying connections between ideas learned months apart.
+- **Automatic Synthesis:** Preparing insights and surfacing relevant patterns while the user is away.
+- **Active Curation:** Transforming a passive database into an active intelligence layer.
+
+### 🕸️ Living Knowledge Graph
+A structural representation of human understanding.
+- **Entity-Relationship Mapping:** Connecting People $\rightarrow$ Concepts $\rightarrow$ Documents $\rightarrow$ Projects.
+- **Evolutionary Memory:** Tracking how a user's understanding of a topic evolves over time.
+- **Contextual Navigation:** Moving through knowledge via meaning-based traversal.
 
 ---
 
 ## 🛠 Technical Architecture
 
-NextVault is built on a layered architecture to ensure intelligence can evolve without breaking the foundation:
+NextVault is built on a modular, provider-agnostic architecture to ensure it can evolve alongside AI advancements.
 
-- **Application Layer:** A premium, minimal, and technically sophisticated user experience.
-- **Orchestration Layer:** Coordinates retrieval and intelligence processing.
-- **Intelligence Layer:** LLMs and reasoning models for synthesis and understanding.
-- **Retrieval Layer:** Hybrid semantic and keyword search infrastructure.
-- **Knowledge Layer:** A persistent semantic knowledge graph of entities and relationships.
-
----
-
-## 🚀 Current Status: Stage 1 (Foundation)
-
-We are in the **Foundation** stage: a working backend for knowledge capture, with the product identity built in front of it.
-
-### Current Progress
-- [x] **Vision Prototype:** Cinematic landing experience with high-performance motion systems. *(Prototype: the product walkthrough on the page is an illustration, not connected to the backend.)*
-- [x] **Product Constitution:** Defined architectural boundaries and development principles.
-- [x] **Ingestion Pipeline (backend):** Upload `.txt` / `.md`, store the raw file, process it in the background into normalized text. *(Working. API only, no UI yet.)*
-- [x] **Authentication & isolation (backend):** Supabase Auth verified via JWKS; every user's data is isolated; rate limited. *(Working. API only, no UI yet.)*
-- [ ] **Memory Engine:** Chunking, embeddings, semantic search. *(Planned.)*
-- [ ] **PDF ingestion.** *(Planned.)*
-
-See [ROADMAP.md](ROADMAP.md) for what comes next and [CHANGELOG.md](CHANGELOG.md) for what has shipped.
-
----
-
-## 💻 Quick Start
-
-### Landing page (frontend)
-```bash
-git clone https://github.com/jatinsahuin/Nextvault-main.git
-cd Nextvault-main
-npm install
-npm run dev
+```mermaid
+graph TD
+    A[Knowledge Capture] --> B[Memory Engine]
+    B --> C{Orchestration Layer}
+    C --> D[Knowledge Layer: Graph + Vector DB]
+    C --> E[Intelligence Layer: LLMs]
+    D --> F[User Experience]
+    E --> F
+    F --> A
 ```
-Open `http://localhost:3000` to experience the vision prototype.
 
-### Backend API
-The backend lives in [`server/`](server/) and needs Node 20+ and PostgreSQL. Setup, authentication, and testing steps are in [`server/README.md`](server/README.md).
+### The Stack
+| Component | Technology | Why? |
+| :--- | :--- | :--- |
+| **API Framework** | Fastify | Ultra-low overhead, high throughput, and strict schema validation. |
+| **Primary Database** | PostgreSQL | Relational reliability for user data and metadata. |
+| **Vector Engine** | pgvector | Tight integration of relational data and semantic vectors in one ACID-compliant store. |
+| **Embeddings** | OpenAI / Local | High-dimensional semantic mapping for deep understanding. |
+| **Language** | TypeScript | Type-safety for complex data orchestrations. |
 
 ---
 
-© 2026 NextVault | Built for the future of human intelligence.
+## 🏁 Getting Started
+
+### Prerequisites
+- Node.js v20+
+- PostgreSQL 15+ with `pgvector` extension
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/jatinsahuin/Nextvault-main.git
+   cd Nextvault-main
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables (`.env`):
+   ```env
+   DATABASE_URL=postgres://user:pass@localhost:5432/nextvault
+   OPENAI_API_KEY=your_key_here
+   JWT_SECRET=your_secure_random_string
+   STORAGE_ROOT=./storage
+   ```
+
+4. Start the server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] **Stage 1: Foundation** — Atomic Ingestion, Secure Vault, Semantic Indexing.
+- [ ] **Stage 2: Intelligence** — Contextual Retrieval, Source-Aware Synthesis.
+- [ ] **Stage 3: Living Knowledge** — Entity Graph, Relationship Discovery.
+- [ ] **Stage 4: Overnight Intelligence™** — Background Synthesis, Insight Generation.
+
+---
+
+## 📜 License
+Distributed under the MIT License. See `LICENSE` for more information.
