@@ -56,6 +56,10 @@ export const repo = {
     return r.rows[0] ?? null;
   },
 
+  async clearContent(db: Queryable, sourceId: string) {
+    await db.query('DELETE FROM normalized_content WHERE source_id = $1', [sourceId]);
+  },
+
   /** Atomically claim one job. SKIP LOCKED makes this safe with any number of workers. */
   async claimNextJob(db: Queryable) {
     const r = await db.query<JobRow>(
@@ -73,15 +77,70 @@ export const repo = {
    */
   async upsertContent(db: Queryable, sourceId: string, text: string, metadata: object, method: string, embedding?: number[]) {
     const embeddingValue = embedding ? `\${JSON.stringify(embedding)}` : 'NULL';
-    await db.query(
-      `INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method, embedding)
-       VALUES ($1,$2,$3,$4, ${embeddingValue})`,
+    const r = await db.query(
+      \`INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method, embedding)
+       VALUES (\$1,\$2,\$3,\$4, \${embeddingValue}) RETURNING id\`,
       [sourceId, text, JSON.stringify(metadata), method],
+    );
+    return r.rows[0].id;
+  },
+
+  async getOrCreateEntity(db: Queryable, userId: string, name: string, type: string, description?: string) {
+    const res = await db.query(
+      `INSERT INTO entities (user_id, name, type, description)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (user_id, name, type) DO UPDATE SET updated_at = now()
+       RETURNING id`,
+      [userId, name, type, description]
+    );
+    return res.rows[0].id;
+  },
+
+  async createRelationship(db: Queryable, userId: string, sourceId: string, targetId: string, type: string) {
+    await db.query(
+      `INSERT INTO relationships (user_id, source_entity_id, target_entity_id, relation_type)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT DO NOTHING`,
+      [userId, sourceId, targetId, type]
     );
   },
 
-  async clearContent(db: Queryable, sourceId: string) {
-    await db.query('DELETE FROM normalized_content WHERE source_id = $1', [sourceId]);
+  async addEntityMention(db: Queryable, entityId: string, contentId: string, snippet: string) {
+    await db.query(
+      `INSERT INTO entity_mentions (entity_id, content_id, context_snippet)
+       VALUES ($1, $2, $3)`,
+      [entityId, contentId, snippet]
+    );
+  },
+
+  async getEntityByName(db: Queryable, userId: string, name: string) {
+    const r = await db.query(
+      `SELECT * FROM entities WHERE user_id = $1 AND name = $2`,
+      [userId, name]
+    );
+    return r.rows[0] ?? null;
+  },
+
+  async getRelatedEntities(db: Queryable, userId: string, entityId: string) {
+    const r = await db.query(
+      `SELECT e.name, e.id
+       FROM relationships rel
+       JOIN entities e ON rel.target_entity_id = e.id
+       WHERE rel.source_entity_id = $1 AND rel.user_id = $2`,
+      [entityId, userId]
+    );
+    return r.rows;
+  },
+
+  async getChunksForEntity(db: Queryable, entityId: string) {
+    const r = await db.query(
+      `SELECT c.*
+       FROM entity_mentions m
+       JOIN normalized_content c ON m.content_id = c.id
+       WHERE m.entity_id = $1`,
+      [entityId]
+    );
+    return r.rows;
   },
 
   async markProcessed(db: Queryable, jobId: string) {

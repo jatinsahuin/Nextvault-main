@@ -1,4 +1,5 @@
 import { SemanticChunker } from '../services/SemanticChunker.js';
+import { EntityExtractor } from '../services/EntityExtractor.js';
 import type { Db } from '../db/pool.js';
 import { withTransaction } from '../db/pool.js';
 import type { StorageProvider } from '../storage/StorageProvider.js';
@@ -24,6 +25,7 @@ export class IngestionWorker {
     private readonly storage: StorageProvider,
     private readonly extractors: ExtractorFactory,
     private readonly embeddingService: any, // Using any for now to avoid complex circular deps in this turn
+    private readonly entityExtractor: EntityExtractor,
     private readonly opts: WorkerOptions,
     private readonly log: { error: (o: unknown, m?: string) => void } = console,
   ) {}
@@ -73,13 +75,34 @@ export class IngestionWorker {
       const chunker = new SemanticChunker();
       const chunks = chunker.chunk(result.text);
 
-      // Content, Embeddings, and PROCESSED status commit together or not at all.
+      // 1. Knowledge Graph Extraction
+      // We extract entities and relations from the full text to maintain global context
+      const graph = await this.entityExtractor.extract(result.text);
+
+      // Content, Embeddings, Graph, and PROCESSED status commit together or not at all.
       await withTransaction(this.db, async (c) => {
+        // A. Clear existing state for idempotency
         await repo.clearContent(c, source.id);
 
+        // B. Store Semantic Chunks
         for (const chunk of chunks) {
           const embedding = await this.embeddingService.generateEmbedding(chunk.text);
-          await repo.upsertContent(c, source.id, chunk.text, { ...result.metadata, chunkIndex: chunk.index }, result.method, embedding.vector);
+          const contentId = await repo.upsertContent(c, source.id, chunk.text, { ...result.metadata, chunkIndex: chunk.index }, result.method, embedding.vector);
+
+          // Link extracted entities to this specific chunk for provenance
+          for (const entity of graph.entities) {
+            if (chunk.text.toLowerCase().includes(entity.name.toLowerCase())) {
+              const entityId = await repo.getOrCreateEntity(c, source.user_id, entity.name, entity.type, entity.description);
+              await repo.addEntityMention(c, entityId, contentId, chunk.text.slice(0, 200) + '...');
+            }
+          }
+        }
+
+        // C. Store Global Relationships
+        for (const rel of graph.relationships) {
+          const sourceId = await repo.getOrCreateEntity(c, source.user_id, rel.source, 'Concept'); // Default to Concept if not found
+          const targetId = await repo.getOrCreateEntity(c, source.user_id, rel.target, 'Concept');
+          await repo.createRelationship(c, source.user_id, sourceId, targetId, rel.type);
         }
 
         await repo.markProcessed(c, job.id);

@@ -33,8 +33,10 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
 
   const embeddingProvider = new OpenAIEmbeddingProvider(config.openaiApiKey || '');
   const embeddingService = new EmbeddingService(embeddingProvider);
+  const synthesisService = new SynthesisService(config.openaiApiKey || '');
+  const entityExtractor = new EntityExtractor(config.openaiApiKey || '');
 
-  const worker = new IngestionWorker(db, storage, new ExtractorFactory(), embeddingService, {
+  const worker = new IngestionWorker(db, storage, new ExtractorFactory(), embeddingService, entityExtractor, {
     pollMs: config.workerPollMs, maxAttempts: config.maxJobAttempts, stuckAfterMs: config.jobStuckAfterMs,
   }, fastify.log);
   const ingestion = new IngestionService(db, storage);
@@ -59,7 +61,7 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
   });
 
   await fastify.register(sourceRoutes, { config, db, ingestion, worker });
-  await fastify.register(searchRoutes, { config, db, embeddingService });
+  await fastify.register(searchRoutes, { config, db, embeddingService, synthesisService, entityExtractor });
   await fastify.register(authRoutes, { config, db });
   fastify.addHook('onClose', async () => { await worker.stop(); });
   return { fastify, worker };
