@@ -67,17 +67,21 @@ export const repo = {
     return r.rows[0] ?? null;
   },
 
-  /** Idempotent: a retried job overwrites rather than duplicating content. */
+  /**
+   * Store content chunks.
+   * We allow multiple chunks per source to support semantic chunking.
+   */
   async upsertContent(db: Queryable, sourceId: string, text: string, metadata: object, method: string, embedding?: number[]) {
-    const embeddingValue = embedding ? \`\${JSON.stringify(embedding)}\` : 'NULL';
+    const embeddingValue = embedding ? `\${JSON.stringify(embedding)}` : 'NULL';
     await db.query(
-      \`INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method, embedding)
-       VALUES (\$1,\$2,\$3,\$4, \${embeddingValue})
-       ON CONFLICT (source_id) DO UPDATE
-         SET extracted_text=EXCLUDED.extracted_text, metadata=EXCLUDED.metadata,
-             extraction_method=EXCLUDED.extraction_method, embedding=EXCLUDED.embedding, created_at=now()\`,
+      `INSERT INTO normalized_content (source_id, extracted_text, metadata, extraction_method, embedding)
+       VALUES ($1,$2,$3,$4, ${embeddingValue})`,
       [sourceId, text, JSON.stringify(metadata), method],
     );
+  },
+
+  async clearContent(db: Queryable, sourceId: string) {
+    await db.query('DELETE FROM normalized_content WHERE source_id = $1', [sourceId]);
   },
 
   async markProcessed(db: Queryable, jobId: string) {

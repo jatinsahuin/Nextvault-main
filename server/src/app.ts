@@ -26,7 +26,7 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
   });
 
   await fastify.register(jwt, {
-    secret: config.jwtSecret || 'dev-secret-do-not-use-in-prod',
+    secret: config.jwtSecret, // Removed fallback to 'dev-secret'
   });
 
   await fastify.register(cookie);

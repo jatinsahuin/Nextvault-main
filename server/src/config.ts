@@ -8,11 +8,13 @@ export interface Config {
   maxJobAttempts: number;
   jobStuckAfterMs: number;
   workerPollMs: number;
+  jwtSecret: string;
+  openaiApiKey: string;
 }
 
 function required(name: string): string {
   const v = process.env[name];
-  if (!v) throw new Error(`Missing required environment variable: ${name}`);
+  if (!v) throw new Error(\`Missing required environment variable: \${name}\`);
   return v;
 }
 
@@ -27,5 +29,7 @@ export function loadConfig(): Config {
     maxJobAttempts: 3,
     jobStuckAfterMs: 5 * 60_000,
     workerPollMs: 2000,
+    jwtSecret: required('JWT_SECRET'),
+    openaiApiKey: required('OPENAI_API_KEY'),
   };
 }

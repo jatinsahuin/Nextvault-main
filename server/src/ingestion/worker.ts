@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { SemanticChunker } from '../services/SemanticChunker.js';
 import type { Db } from '../db/pool.js';
 import { withTransaction } from '../db/pool.js';
 import type { StorageProvider } from '../storage/StorageProvider.js';
@@ -69,11 +69,19 @@ export class IngestionWorker {
         throw new ExtractionError('Stored file does not match its recorded hash', 'INTEGRITY_MISMATCH');
       }
       const result = await this.extractors.forMime(source.mime_type).extract(raw);
-      const embedding = await this.embeddingService.generateEmbedding(result.text);
 
-      // Content, Embedding, and PROCESSED status commit together or not at all.
+      const chunker = new SemanticChunker();
+      const chunks = chunker.chunk(result.text);
+
+      // Content, Embeddings, and PROCESSED status commit together or not at all.
       await withTransaction(this.db, async (c) => {
-        await repo.upsertContent(c, source.id, result.text, result.metadata, result.method, embedding.vector);
+        await repo.clearContent(c, source.id);
+
+        for (const chunk of chunks) {
+          const embedding = await this.embeddingService.generateEmbedding(chunk.text);
+          await repo.upsertContent(c, source.id, chunk.text, { ...result.metadata, chunkIndex: chunk.index }, result.method, embedding.vector);
+        }
+
         await repo.markProcessed(c, job.id);
       });
     } catch (err) {
