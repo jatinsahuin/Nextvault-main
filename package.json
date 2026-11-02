@@ -15,5 +15,10 @@
   },
   "allowScripts": {
     "esbuild@0.21.5": true
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.5",
+    "@fastify/jwt": "^10.2.6",
+    "bcrypt": "^6.0.0"
   }
 }

@@ -1,5 +1,7 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import multipart from '@fastify/multipart';
+import jwt from '@fastify/jwt';
+import cookie from '@fastify/cookie';
 import type { Config } from './config.js';
 import type { Db } from './db/pool.js';
 import type { StorageProvider } from './storage/StorageProvider.js';
@@ -9,6 +11,7 @@ import { ExtractorFactory } from './ingestion/extractors/ExtractorFactory.js';
 import { UploadRejected } from './ingestion/uploadValidation.js';
 import { sourceRoutes } from './routes/sources.js';
 import { searchRoutes } from './routes/search.js';
+import { authRoutes } from './routes/auth.js';
 import { OpenAIEmbeddingProvider } from './providers/ai/OpenAIEmbeddingProvider.js';
 import { EmbeddingService } from './services/EmbeddingService.js';
 
@@ -21,6 +24,12 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
   await fastify.register(multipart, {
     limits: { fileSize: config.maxUploadBytes, files: 1, fields: 5, parts: 6 },
   });
+
+  await fastify.register(jwt, {
+    secret: config.jwtSecret || 'dev-secret-do-not-use-in-prod',
+  });
+
+  await fastify.register(cookie);
 
   const embeddingProvider = new OpenAIEmbeddingProvider(config.openaiApiKey || '');
   const embeddingService = new EmbeddingService(embeddingProvider);
@@ -51,6 +60,7 @@ export async function buildApp(config: Config, db: Db, storage: StorageProvider,
 
   await fastify.register(sourceRoutes, { config, db, ingestion, worker });
   await fastify.register(searchRoutes, { config, db, embeddingService });
+  await fastify.register(authRoutes, { config, db });
   fastify.addHook('onClose', async () => { await worker.stop(); });
   return { fastify, worker };
 }
